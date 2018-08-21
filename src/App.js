@@ -1,34 +1,53 @@
 import React, { Component } from "react";
 import "./App.css";
 import { fonts } from "./fonts";
-const figlet = require("./figlet");
+const figlet = require("./figlet"),
+  _ = require("lodash");
 
 const outputRender = output => {
-  return output.join("\n");
+  //   return output.join("\n");
+  return output.map((o, i) => (
+    <div editable="true" key={i}>
+      {o}
+    </div>
+  ));
 };
 
 class App extends Component {
   constructor() {
     super();
-    this.state = { output: [] };
+    this.state = {
+      output: [],
+      loading: true
+    };
   }
-  componentDidMount() {}
+
+  componentDidMount() {
+    this.outputCreate("Type..");
+  }
 
   outputCreate = text => {
     this.setState(
       {
-        output: []
+        output: [],
+        loading: true
       },
       () => {
-        let _this = this;
-        let fontsBunch = fonts.sort(() => 0.5 - Math.random()).slice(0, 10);
+        let _this = this,
+          fontsBunch = _.cloneDeep(fonts);
+        fontsBunch = fontsBunch.sort(() => 0.5 - Math.random()).slice(0, 20);
         fontsBunch.forEach(font => {
+          // This should all run through promises, with loading: false at the end, but meh
           figlet(text, font, function(err, text) {
             if (err) {
-              console.error("something went wrong...", err);
+              console.error(err);
               return;
             }
-            _this.setState({ output: [..._this.state.output, text] });
+            // text = " -dwa-- " + font + "\n" + text;
+            _this.setState({
+              output: [..._this.state.output, text],
+              loading: false
+            });
           });
         });
       }
@@ -36,18 +55,28 @@ class App extends Component {
   };
 
   inputHandler = e => {
-    this.setState({
-      text: e.target.value
-    });
-    this.outputCreate(e.target.value);
+    let text = e.target.value;
+    clearTimeout(this.inputHandlerTimeout);
+    this.inputHandlerTimeout = setTimeout(() => {
+      console.log("calc..");
+      this.setState({
+        text: text
+      });
+      this.outputCreate(text);
+    }, 150);
   };
 
   render() {
     return (
-      <div>
-        <input onChange={this.inputHandler} />
-        <pre editable="true">{outputRender(this.state.output)}</pre>
-      </div>
+      <main>
+        <input onChange={this.inputHandler} placeholder="Type.." />
+        {this.state.loading && (
+          <div className="output">
+            <div>...</div>
+          </div>
+        )}
+        <div className="output">{outputRender(this.state.output)}</div>
+      </main>
     );
   }
 }
