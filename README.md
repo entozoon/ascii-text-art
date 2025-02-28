@@ -7,7 +7,7 @@ c$$$cc$$$c  '''   $$$$        $$$       $$      $$"""      Y$$$P       $$      c
  YMM   ""`  "YMMY"   "YUMMMMP"MMM       MMM     """"UMM,m"      "Mm,   MMM      YMM   ""` MMM   "W"   MMM
 ````
 
-### **[💬 Visit ascii-text-art.netlify.com!](http://ascii-text-art.netlify.com)**
+### **[💬 Visit ascii-text-art.netlify.app!](http://ascii-text-art.netlify.app)**
 
 Type to create random text art.
 
